@@ -35,10 +35,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
               let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
               self.movies = dataDictionary["results"] as! [[String:Any]]
               self.tableView.reloadData()
-              // TODO: Get the array of movies
-              // TODO: Store the movies in a property to use elsewhere
-              // TODO: Reload your table view data
-
            }
         }
         task.resume()
@@ -50,7 +46,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell") as! MovieCell
         let movie = movies[indexPath.row]
-        print(movie)
         let title = movie["title"]
         let synopsis = movie["overview"]
         let baseUrl = "https://image.tmdb.org/t/p/w185"
@@ -65,6 +60,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         
         return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+        let cell = sender as! UITableViewCell
+        let indexPath = tableView.indexPath(for: cell)!
+        let movie = movies[indexPath.row]
+        let detailsViewController = segue.destination as! MovieDetailsViewController
+        detailsViewController.movie = movie
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
 
